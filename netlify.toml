@@ -9,7 +9,26 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
+# Long, immutable cache ONLY for versioned binary assets (images, fonts).
+# NEVER put CSS/JS here — otherwise deploys look "different" until cache expires.
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/img/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/assets/*.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, must-revalidate"
+
+# CSS + JS must always revalidate so Netlify + browsers fetch the newest deploy.
+# This is the fix for "local looks right, deployed looks old".
+[[headers]]
+  for = "/assets/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
