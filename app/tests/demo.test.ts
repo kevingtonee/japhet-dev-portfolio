@@ -13,7 +13,7 @@ describe('ILANA storefront model',()=>{
   expect(nextStk('idle')).toBe('sending');expect(nextStk('sending')).toBe('prompted');expect(nextStk('prompted')).toBe('confirmed');expect(nextStk('confirmed')).toBe('confirmed');
  });
  it('derives deterministic order codes',()=>{expect(orderCode(11800)).toBe(orderCode(11800));expect(orderCode(11800)).toMatch(/^IL-\d+$/)});
- it('every product has bilingual copy and a positive price',()=>{for(const p of ilanaProducts){expect(p.name.en&&p.name.cn).toBeTruthy();expect(p.price).toBeGreaterThan(0)}});
+ it('every product has a name, line and a positive price',()=>{for(const p of ilanaProducts){expect(p.name).toBeTruthy();expect(p.line).toBeTruthy();expect(p.price).toBeGreaterThan(0)}});
 });
 describe('ReMarket offers model',()=>{
  it('searches listings by keyword, alias and case',()=>{
@@ -24,21 +24,21 @@ describe('ReMarket offers model',()=>{
  });
  it('validates offers',()=>{expect(isValidOffer(500)).toBe(true);expect(isValidOffer(0)).toBe(false);expect(isValidOffer(NaN)).toBe(false)});
  it('accepts strong offers, counters mid offers, declines lowballs',()=>{
-  expect(sellerReply(17000,18000,'en').tone).toBe('accept');
-  expect(sellerReply(12000,18000,'en').tone).toBe('counter');
-  expect(sellerReply(3000,18000,'en').tone).toBe('decline');
-  expect(sellerReply(12000,18000,'cn').text).toContain(formatKES(counterPrice(18000)));
+  expect(sellerReply(17000,18000).tone).toBe('accept');
+  expect(sellerReply(12000,18000).tone).toBe('counter');
+  expect(sellerReply(3000,18000).tone).toBe('decline');
+  expect(sellerReply(12000,18000).text).toContain(formatKES(counterPrice(18000)));
  });
  it('counters just under asking in clean steps',()=>{expect(counterPrice(18000)).toBeLessThan(18000);expect(counterPrice(18000)%50).toBe(0)});
 });
 describe('VibeMeet chat model',()=>{
- it('threads exist for every channel in both languages',()=>{
-  for(const c of vibeChannels){expect(vibeThreads[c.id].length).toBeGreaterThan(0);for(const m of vibeThreads[c.id])expect(m.text.en&&m.text.cn).toBeTruthy()}
+ it('threads exist for every channel',()=>{
+  for(const c of vibeChannels){expect(vibeThreads[c.id].length).toBeGreaterThan(0);for(const m of vibeThreads[c.id])expect(m.text).toBeTruthy()}
  });
  it('picks replies deterministically within bounds',()=>{
-  expect(pickReply('en',0)).toBe(vibeReplies.en[0]);
-  expect(pickReply('en',vibeReplies.en.length)).toBe(vibeReplies.en[0]);
-  expect(pickReply('cn',-1)).toBe(vibeReplies.cn[vibeReplies.cn.length-1]);
+  expect(pickReply(0)).toBe(vibeReplies[0]);
+  expect(pickReply(vibeReplies.length)).toBe(vibeReplies[0]);
+  expect(pickReply(-1)).toBe(vibeReplies[vibeReplies.length-1]);
  });
 });
 describe('Student Hub planner model',()=>{
@@ -50,17 +50,16 @@ describe('Student Hub planner model',()=>{
  it('maps grades to letters',()=>{expect(gradeLetter(78)).toBe('A');expect(gradeLetter(66)).toBe('B');expect(gradeLetter(52)).toBe('C');expect(gradeLetter(45)).toBe('D');expect(gradeLetter(20)).toBe('E')});
 });
 describe('project link integrity',()=>{
- it('every case carries https links and honest status in both languages',()=>{
-  for(const cases of Object.values(projects))for(const item of cases){
+ it('every case carries https links and honest status',()=>{
+  for(const item of projects){
    if(item.links.live)expect(item.links.live).toMatch(/^https:\/\//);
    if(item.links.source)expect(item.links.source).toMatch(/^https:\/\//);
    expect(['live','building']).toContain(item.status);
    expect(item.demoHint).toBeTruthy();expect(item.context).toBeTruthy();
    if(item.status==='building')expect(item.links.live).toBeUndefined();
   }
-  expect(projects.cn.map(p=>p.links.live)).toEqual(projects.en.map(p=>p.links.live));
  });
  it('shipped client and marketplace cases include a real screenshot',()=>{
-  for(const locale of ['cn','en'] as const){const shots=projects[locale].filter(p=>p.shot).map(p=>p.id);expect(shots).toEqual(['ilana','remarket'])}
+  const shots=projects.filter(p=>p.shot).map(p=>p.id);expect(shots).toEqual(['ilana','remarket']);
  });
 });
