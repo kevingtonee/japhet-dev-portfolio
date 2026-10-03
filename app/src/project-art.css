@@ -1,0 +1,167 @@
+/* Original, code-rendered interface studies of real shipped projects. */
+.mock-cover{container-type:inline-size;display:flex;flex-direction:column;justify-content:space-between;padding:24px 28px 20px;gap:20px;background:#dedee0;color:#171719}
+.mock-cover-label,.mock-cover-index{display:flex;justify-content:space-between;font-size:8px;letter-spacing:.12em;line-height:1.5}
+.mock-cover-label span:last-child{opacity:.55}.mock-cover-index{font-size:7px;opacity:.65}
+.mock-cover-app{width:100%;text-align:left;font-size:clamp(6px,1.4cqw,10px)}
+.project-card .project-visual.mock-cover{aspect-ratio:1.5}.project-card:first-child .project-visual.mock-cover{aspect-ratio:2.22}
+.mock-ilana{background:#ece3d1}.mock-remarket{background:#232326}.mock-vibemeet{background:#191b20}.mock-studenthub{background:#e3e8ef}
+.mock-toolbar{display:flex;align-items:center;gap:1.5em;justify-content:space-between;padding:1.3em 1.6em;border-bottom:1px solid #ffffff12;font-size:.8em}
+.mock-toolbar>b{font-size:1.7em;letter-spacing:-.045em;font-weight:550;white-space:nowrap}.mock-toolbar>span{font-size:.9em;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mock-toolbar>small{font-size:.75em;white-space:nowrap;letter-spacing:.08em;color:#aaa}.mock-symbol,.mock-toolbar b>span{color:var(--accent)}
+
+/* ---------------- ILANA · storefront ---------------- */
+.il-shop{background:#fbf8f1;color:#26211a;border-radius:8px;overflow:hidden}
+.il-shop .mock-toolbar{border-bottom:1px solid #26211a14}.il-shop .mock-toolbar>span,.il-shop .mock-toolbar>small{color:#8a7f68}
+.il-body{display:grid;grid-template-columns:60% 40%;min-height:26em}
+.il-products{display:grid;grid-template-columns:1fr 1fr;gap:1em;padding:1.6em;align-content:start}
+.il-product{border:1px solid #26211a14;border-radius:6px;overflow:hidden;background:#fffdf8}
+.il-gem{display:grid;place-items:center;aspect-ratio:1.9;color:#fff8;font-size:2.2em}
+.il-product b{display:block;font-size:.95em;font-weight:550;letter-spacing:-.02em;padding:.8em 1em 0}
+.il-product>small{display:block;font-size:.68em;color:#8a7f68;padding:.2em 1.2em .8em}
+.il-buy{display:flex;justify-content:space-between;align-items:center;padding:.7em 1em;border-top:1px solid #26211a10;font-size:.75em;font-weight:550}
+.il-add{border:1px solid #26211a;border-radius:999px;padding:.45em 1em;font-size:.92em;white-space:nowrap}
+.il-cart{border-left:1px solid #26211a14;padding:1.6em;display:flex;flex-direction:column;gap:1em;min-width:0}
+.il-cart>small{font-size:.62em;letter-spacing:.14em;color:#8a7f68}
+.il-empty{font-size:.8em;color:#8a7f68;line-height:1.7}
+.il-cart ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6em}
+.il-cart li{display:flex;justify-content:space-between;gap:1em;font-size:.75em}
+.il-cart li span:first-child{color:#5c5344}
+.il-total{display:flex;justify-content:space-between;border-top:1px solid #26211a1c;padding-top:1em;font-size:.8em}
+.il-pay{display:block;width:100%;text-align:center;background:#26211a;color:#f7f1e4;border-radius:6px;padding:1em;font-size:.8em;font-weight:550;letter-spacing:.02em;min-height:3.6em}
+.il-pay.is-busy{background:var(--accent);color:#26211a}
+.il-status{font-size:.66em;color:#8a7f68;line-height:1.6;min-height:2.4em}
+.il-status.is-prompted{color:#8a6a1f}.il-status.is-confirmed{color:#2e7d6b}
+
+/* ---------------- ReMarket · marketplace ---------------- */
+.rm-app{background:#f4f3f1;color:#242426;border-radius:8px;overflow:hidden}
+.rm-app .mock-toolbar{border-bottom:1px solid #0001}.rm-app .mock-toolbar>span,.rm-app .mock-toolbar>small{color:#8b8f9b}
+.rm-body{display:grid;grid-template-columns:46% 54%;min-height:27em}
+.rm-list{border-right:1px solid #0001;display:flex;flex-direction:column;min-width:0}
+.rm-search{padding:1.2em 1.4em;border-bottom:1px solid #0001;font-size:.85em}
+.rm-search input{width:100%;min-width:0;border:1px solid #0002;background:#fff;border-radius:4px;padding:.7em 1em;font:inherit;outline:none;color:#242426}
+.rm-search input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rm-search>span{color:#9aa0ab}
+.rm-item{display:grid;grid-template-columns:2.8em 1fr auto;gap:1em;align-items:center;text-align:left;width:100%;padding:1em 1.4em;font-size:.82em;border-bottom:1px solid #00000008;min-height:4.6em}
+.rm-item i{display:block;width:2.8em;height:2.8em;border-radius:5px}
+.rm-item b{display:block;font-weight:550;letter-spacing:-.01em}
+.rm-item small{display:block;color:#8b8f9b;font-size:.8em;margin-top:.3em}
+.rm-item em{font-style:normal;font-weight:550;font-size:.95em}
+.rm-item.is-current{background:#fff;box-shadow:inset 2px 0 0 var(--accent)}
+.rm-empty{padding:2.5em 1.4em;font-size:.85em;color:#555}.rm-empty small{display:block;margin-top:.6em;color:#9aa0ab}
+.rm-detail{padding:1.6em;display:flex;flex-direction:column;gap:1.2em;min-width:0}
+.rm-detail-head{display:grid;grid-template-columns:3.6em 1fr auto;gap:1.1em;align-items:center}
+.rm-detail-head i{display:block;width:3.6em;height:3.6em;border-radius:6px}
+.rm-detail-head b{font-size:1.15em;letter-spacing:-.02em;display:block}
+.rm-detail-head small{color:#8b8f9b;font-size:.72em;display:block;margin-top:.3em}
+.rm-detail-head em{font-style:normal;font-weight:600;font-size:1.05em}
+.rm-thread{display:flex;flex-direction:column;gap:.7em;min-height:9em;padding:1em;background:#eceae6;border-radius:6px}
+.rm-hint{color:#9aa0ab;font-size:.75em;margin:auto}
+.rm-msg{margin:0;font-size:.78em;line-height:1.55;padding:.8em 1.1em;border-radius:10px;max-width:85%}
+.rm-msg.is-me{align-self:flex-end;background:#242426;color:#f4f3f1;border-bottom-right-radius:2px}
+.rm-msg.is-seller{align-self:flex-start;background:#fff;border:1px solid #0001;border-bottom-left-radius:2px}
+.rm-offer{display:flex;gap:.8em;font-size:.85em}
+.rm-offer input{flex:1;min-width:0;border:1px solid #0002;border-radius:4px;padding:.8em 1em;font:inherit;outline:none;background:#fff;color:#242426}
+.rm-offer input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rm-offer button,.rm-fake-btn{background:#242426;color:#f4f3f1;border-radius:4px;padding:.8em 1.4em;white-space:nowrap}
+.rm-offer>span:first-child{flex:1;border:1px dashed #0003;border-radius:4px;padding:.8em 1em;color:#9aa0ab}
+
+/* ---------------- VibeMeet · realtime chat ---------------- */
+.vm-app{display:grid;grid-template-columns:30% 70%;min-height:28em;background:#17191e;color:#e8eaef;border-radius:8px;overflow:hidden}
+.vm-rail{border-right:1px solid #ffffff0f;padding:1.5em 1.1em;display:flex;flex-direction:column;gap:.4em;min-width:0}
+.vm-brand{font-size:1.5em;letter-spacing:-.04em;font-weight:600;margin-bottom:1.2em}.vm-brand span{color:var(--accent)}
+.vm-rail>small{font-size:.58em;letter-spacing:.14em;color:#7d8590;margin:1.2em 0 .4em}
+.vm-channel{display:block;text-align:left;width:100%;padding:.7em .9em;font-size:.8em;color:#aab2bd;border-radius:5px}
+.vm-channel.is-current{background:#ffffff10;color:#fff}
+.vm-member{display:flex;align-items:center;gap:.7em;font-size:.72em;color:#aab2bd;padding:.35em .9em}
+.vm-member i{width:.6em;height:.6em;border-radius:50%;background:#4a4f58}
+.vm-member i.is-online{background:#4fb8a3}
+.vm-main{display:flex;flex-direction:column;min-width:0}
+.vm-head{display:flex;align-items:baseline;gap:1.2em;padding:1.4em 1.8em;border-bottom:1px solid #ffffff0f}
+.vm-head b{font-size:1.05em;letter-spacing:-.02em}
+.vm-head span{font-size:.7em;color:#7d8590;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vm-live{margin-left:auto;font-style:normal;font-size:.58em;letter-spacing:.12em;color:#4fb8a3;border:1px solid #4fb8a355;border-radius:999px;padding:.35em .9em}
+.vm-thread{flex:1;display:flex;flex-direction:column;gap:1.1em;padding:1.6em 1.8em;min-height:15em}
+.vm-msg{display:grid;grid-template-columns:2.4em 1fr;gap:.9em;align-items:start}
+.vm-avatar{display:grid;place-items:center;width:2.4em;height:2.4em;border-radius:50%;background:#ffffff12;font-size:.62em;color:#cfd5dd}
+.vm-msg small{color:#7d8590;font-size:.66em;display:block;margin-bottom:.3em}
+.vm-msg p{margin:0;font-size:.78em;line-height:1.6;background:#ffffff08;border:1px solid #ffffff0a;padding:.7em 1em;border-radius:8px;border-top-left-radius:2px;width:fit-content;max-width:100%}
+.vm-msg.is-self p{background:#c99a3f1c;border-color:#c99a3f33}
+.vm-typing{display:grid;grid-template-columns:2.4em 1fr;gap:.9em;align-items:center}
+.vm-typing p{margin:0;font-size:.72em;color:#7d8590}
+.vm-dots b{animation:vm-blink 1.2s infinite;font-style:normal}
+.vm-dots b:nth-child(2){animation-delay:.2s}.vm-dots b:nth-child(3){animation-delay:.4s}
+@keyframes vm-blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+.vm-composer{display:flex;gap:.8em;padding:1.2em 1.8em;border-top:1px solid #ffffff0f;font-size:.85em}
+.vm-composer input{flex:1;min-width:0;background:#ffffff0a;border:1px solid #ffffff14;border-radius:6px;padding:.8em 1.1em;font:inherit;color:#e8eaef;outline:none}
+.vm-composer input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.vm-composer button,.vm-fake-btn{background:var(--accent);color:#241f16;border-radius:6px;padding:.8em 1.5em;font-weight:600;white-space:nowrap}
+.vm-composer>span:first-child{flex:1;border:1px dashed #ffffff22;border-radius:6px;padding:.8em 1.1em;color:#5c6470}
+
+/* ---------------- Student Hub · planner + grades ---------------- */
+.sh-app{background:#fbfcfe;color:#1c2330;border-radius:8px;overflow:hidden}
+.sh-app .mock-toolbar{border-bottom:1px solid #1c233012}.sh-app .mock-toolbar>span,.sh-app .mock-toolbar>small{color:#7d8590}
+.sh-body{display:grid;grid-template-columns:55% 45%;min-height:26em}
+.sh-planner{padding:1.6em;border-right:1px solid #1c233012;min-width:0}
+.sh-days{display:flex;gap:.5em;flex-wrap:wrap}
+.sh-day{border:1px solid #1c233026;border-radius:999px;padding:.55em 1.1em;font-size:.72em;color:#4a5261;min-height:2.6em}
+.sh-day.is-current{background:#1c2330;color:#fbfcfe;border-color:#1c2330}
+.sh-classes{margin-top:1.4em;display:flex;flex-direction:column;gap:.8em}
+.sh-class{display:grid;grid-template-columns:4.5em 1fr auto;gap:1em;align-items:baseline;padding:.9em 1.1em;background:#fff;border:1px solid #1c233010;border-left:2px solid var(--accent);border-radius:5px;font-size:.8em}
+.sh-time{color:#7d8590;font-variant-numeric:tabular-nums}
+.sh-class b{font-weight:550;letter-spacing:-.01em}
+.sh-class small{color:#7d8590;font-size:.85em}
+.sh-note{margin-top:1.4em;font-size:.72em;color:#2e7d6b;line-height:1.6}
+.sh-grades{padding:1.6em;display:flex;flex-direction:column;gap:1em;min-width:0}
+.sh-avg{display:flex;align-items:baseline;gap:1em;padding-bottom:1.2em;border-bottom:1px solid #1c233012}
+.sh-avg small{font-size:.58em;letter-spacing:.14em;color:#7d8590}
+.sh-avg b{font-size:2.4em;letter-spacing:-.05em;font-weight:600}
+.sh-letter{margin-left:auto;display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:50%;background:var(--accent);color:#241f16;font-weight:600;font-size:.85em}
+.sh-course>div:first-child{display:flex;align-items:baseline;gap:.8em;font-size:.75em}
+.sh-course b{font-weight:600}
+.sh-course span{color:#7d8590}
+.sh-course em{margin-left:auto;font-style:normal;font-weight:600;font-variant-numeric:tabular-nums}
+.sh-bar{height:.5em;background:#1c233010;border-radius:999px;margin-top:.5em;overflow:hidden}
+.sh-bar i{display:block;height:100%;border-radius:999px;background:#8b8f9b}
+.sh-bar i[data-letter="A"]{background:#4fb8a3}.sh-bar i[data-letter="B"]{background:#c99a3f}.sh-bar i[data-letter="C"]{background:#b8725c}
+
+/* Demos use readable, responsive UI, not the scaled cover typography. */
+.case-demo-heading{margin:32px 0 16px}.case-demo-heading>span{font-size:9px;letter-spacing:.08em;color:var(--accent)}.case-demo-heading>p{font-size:12px;color:var(--muted);line-height:1.8;margin-top:10px}
+.project-demo{font-size:12px;container-type:inline-size;border:1px solid #ffffff15;border-radius:8px;overflow:hidden}
+.project-demo .mock-toolbar{font-size:10px}.project-demo button:focus-visible{outline-offset:-3px}
+.project-demo .il-body{min-height:0}.project-demo .il-products{padding:16px;gap:12px}.project-demo .il-product b{font-size:13px}.project-demo .il-product>small{font-size:10px}.project-demo .il-buy{font-size:11px;padding:10px 12px}.project-demo .il-add{min-height:36px}.project-demo .il-cart{padding:16px;gap:12px}.project-demo .il-cart>small{font-size:9px}.project-demo .il-cart li{font-size:11px}.project-demo .il-total{font-size:12px}.project-demo .il-pay{font-size:12px;min-height:46px}.project-demo .il-status{font-size:10px}
+.project-demo .rm-body{min-height:0}.project-demo .rm-search{font-size:12px;padding:14px}.project-demo .rm-search input{min-height:44px}.project-demo .rm-item{font-size:11px;padding:12px 14px;min-height:60px}.project-demo .rm-detail{padding:16px}.project-demo .rm-detail-head b{font-size:15px}.project-demo .rm-detail-head em{font-size:13px}.project-demo .rm-thread{min-height:110px}.project-demo .rm-msg{font-size:11px}.project-demo .rm-offer{font-size:12px}.project-demo .rm-offer input{min-height:44px}.project-demo .rm-offer button{min-height:44px}
+.project-demo .vm-app{min-height:0}.project-demo .vm-rail{padding:14px 10px}.project-demo .vm-brand{font-size:17px}.project-demo .vm-channel{font-size:11px;min-height:38px}.project-demo .vm-member{font-size:10px}.project-demo .vm-head{padding:12px 16px}.project-demo .vm-head b{font-size:13px}.project-demo .vm-head span{font-size:10px}.project-demo .vm-thread{padding:14px 16px;min-height:200px;gap:12px}.project-demo .vm-msg p{font-size:11px}.project-demo .vm-avatar{width:30px;height:30px;font-size:9px}.project-demo .vm-composer{font-size:12px;padding:12px 16px}.project-demo .vm-composer input{min-height:44px}.project-demo .vm-composer button{min-height:44px}
+.project-demo .sh-body{min-height:0}.project-demo .sh-planner,.project-demo .sh-grades{padding:16px}.project-demo .sh-day{min-height:44px;font-size:11px}.project-demo .sh-class{font-size:11px;padding:12px}.project-demo .sh-avg b{font-size:30px}.project-demo .sh-course>div:first-child{font-size:11px}.project-demo .sh-note{font-size:10px}
+
+/* Case-study extras: status, links, live screenshot. */
+.case-context{font-size:11px;color:var(--muted);margin:16px 0}
+.case-status-row{display:flex;align-items:center;gap:14px;margin:18px 0 0}
+.case-status{display:inline-flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.12em;border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:8px 14px;text-transform:uppercase}
+.case-status i{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.case-status.is-building{border-color:#4fb8a3;color:#4fb8a3}.case-status.is-building i{background:#4fb8a3}
+.case-links{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0 8px}
+.case-links a{display:inline-flex;align-items:center;gap:10px;min-height:44px;border:1px solid var(--line);border-radius:6px;padding:10px 18px;font-size:12px;transition:border-color .2s,color .2s}
+.case-links a:hover{border-color:var(--accent);color:var(--accent)}
+.case-shot{margin:8px 0 28px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.case-shot img{display:block;width:100%;height:auto}
+.case-shot figcaption{font-size:9px;letter-spacing:.08em;color:var(--muted);padding:12px 16px;border-top:1px solid var(--line);text-transform:uppercase}
+
+@media(max-width:700px){
+ .project-card .project-visual.mock-cover,.project-card:first-child .project-visual.mock-cover{aspect-ratio:auto;min-height:300px}
+ .mock-cover{padding:18px 18px 16px;gap:14px}.mock-cover-label{font-size:6px}.mock-cover-label span:last-child{display:none}.mock-cover-index{font-size:6px}
+ .mock-cover-app{font-size:clamp(5px,1.6cqw,9px)}
+ .il-body,.rm-body,.sh-body{grid-template-columns:1fr}
+ .vm-app{grid-template-columns:1fr}.vm-rail{display:none}
+ .il-cart{border-left:0;border-top:1px solid #26211a14}
+ .rm-list{border-right:0;border-bottom:1px solid #0001}
+ .sh-planner{border-right:0;border-bottom:1px solid #1c233012}
+ .mock-cover .vm-rail{display:flex}
+ .mock-cover .il-products{grid-template-columns:1fr 1fr}
+ .mock-cover .rm-detail{display:none}
+ .mock-cover .rm-body,.mock-cover .il-body,.mock-cover .sh-body{grid-template-columns:1fr;min-height:0}
+ .mock-cover .rm-list{border-right:0}
+ .project-demo .rm-list{max-height:260px;overflow:auto}
+ .project-demo .il-products{grid-template-columns:1fr 1fr}
+ .project-demo .vm-rail{display:none}
+ .project-demo .vm-app{grid-template-columns:1fr}
+ .case-links a{width:100%;justify-content:space-between}
+}
