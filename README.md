@@ -2,11 +2,11 @@
 
 Personal portfolio site. Full-stack and AI engineer.
 
-**Live:** https://japhet-nyangaresi.netlify.app/
+**Live:** https://japhet-dev-portfolio.vercel.app/
 
 ## Stack
 
-React 19 + TypeScript + Vite, deployed on Netlify. Static site — no backend; the contact form posts to Formspree.
+React 19 + TypeScript + Vite, deployed on Vercel. Static site — no backend; the contact form posts to Formspree.
 
 ## Layout
 
@@ -23,7 +23,7 @@ app/                    The entire site (React + Vite)
     styles.css, adaptation.css, project-art.css
   public/               Fonts, images, robots.txt, sitemap.xml
   tests/                Vitest unit tests
-netlify.toml            Build config (base = app) + security/cache headers
+vercel.json            Build (app dir) + security/cache headers
 ```
 
 ## Commands
@@ -36,6 +36,15 @@ npm run check    # tsc --noEmit
 npm test         # vitest run
 npm run build    # typecheck + production build to app/dist
 ```
+
+## Deploy (Vercel)
+
+This repo keeps the Vite app in `app/`, so Vercel needs the Root Directory set:
+
+1. Vercel → this project → **Settings → General → Root Directory** → `app`.
+2. Build Command: `npm run build` · Output Directory: `dist` · Install Command: `npm ci`.
+   (The checked-in `vercel.json` also declares `dist` + headers; it assumes Root Directory `app`.)
+3. Deploy. No environment variables are needed.
 
 ## Content
 
