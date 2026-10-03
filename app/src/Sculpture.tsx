@@ -1,8 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
-import {copy} from './content';
+import {copy,type Locale} from './content';
 import {surfacePoint} from './model';
-export function Sculpture() {
- const c=copy, canvas=useRef<HTMLCanvasElement>(null),angle=useRef(0.4),formRef=useRef(0),paint=useRef<()=>void>(()=>{});
+export function Sculpture({locale}:{locale:Locale}) {
+ const c=copy[locale], canvas=useRef<HTMLCanvasElement>(null),angle=useRef(0.4),formRef=useRef(0),paint=useRef<()=>void>(()=>{});
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [playing,setPlaying]=useState(()=>!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [form,setForm]=useState(0);

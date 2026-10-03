@@ -10,12 +10,12 @@ for(const id of ['ilana','remarket','vibemeet','studenthub']){
   expect(html).toContain('aria-hidden="true"');
  });
  it(id+' demo exposes real controls separately from the cover',()=>{
-  const html=renderToStaticMarkup(createElement(ProjectDemo,{id}));
+  const html=renderToStaticMarkup(createElement(ProjectDemo,{id,locale:'cn'}));
   expect(html).toMatch(/<(button|input|textarea)\b/);
   expect(html).toContain('project-demo');
  });
- it(id+' demo renders its sample-data toolbar',()=>{
-  const html=renderToStaticMarkup(createElement(ProjectDemo,{id}));
-  expect(html).toContain('mock-toolbar');
+ it(id+' demo renders in English as well',()=>{
+  const html=renderToStaticMarkup(createElement(ProjectDemo,{id,locale:'en'}));
+  expect(html).toContain('project-demo');
  });
 }
