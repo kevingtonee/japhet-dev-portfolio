@@ -2,7 +2,7 @@
 
 Personal portfolio site. Full-stack and AI engineer.
 
-**Live:** https://japhet-dev-portfolio.netlify.app/
+**Live:** https://japhet-nyangaresi.netlify.app/
 
 ## Stack
 
