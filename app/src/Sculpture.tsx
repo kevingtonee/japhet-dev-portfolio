@@ -1,11 +1,84 @@
 import {useEffect,useRef,useState} from 'react';
 import {copy} from './content';
 import {surfacePoint} from './model';
+
+/* Typewriter signature: types `text` once (paused when prefers-reduced-motion),
+   with a soft per-keystroke tick via WebAudio. Sound only starts after the
+   visitor presses "play signature" (browsers block audio before a gesture),
+   and each run stops cleanly at the end — no loops, no autoplay. */
+const SIGNATURE_TEXT = 'Japhet Nyangaresi';
+const SIGNATURE_SUB = 'FULL-STACK · AI ENGINEER';
+function useTypewriter(reduced: boolean) {
+ const [chars, setChars] = useState(0);
+ const [started, setStarted] = useState(false);
+ const [done, setDone] = useState(false);
+ const [muted, setMuted] = useState(false);
+ const audio = useRef<AudioContext | null>(null);
+ const timer = useRef(0);
+ function tick() {
+  try {
+   if (!audio.current) {
+    const Ctor = window.AudioContext || (window as unknown as {webkitAudioContext?: typeof AudioContext}).webkitAudioContext;
+    if (!Ctor) return;
+    audio.current = new Ctor();
+   }
+   const ctx = audio.current;
+   if (ctx.state === 'suspended') void ctx.resume();
+   const osc = ctx.createOscillator();
+   const gain = ctx.createGain();
+   osc.type = 'sine';
+   osc.frequency.value = 660 + Math.random() * 220;
+   gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+   gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.012);
+   gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.07);
+   osc.connect(gain).connect(ctx.destination);
+   osc.start();
+   osc.stop(ctx.currentTime + 0.09);
+  } catch { /* audio is decorative — never break typing */ }
+ }
+ function start() {
+  window.clearInterval(timer.current);
+  setChars(0);
+  setDone(false);
+  setStarted(true);
+ }
+ function replay() {
+  start();
+ }
+ useEffect(() => {
+  if (!started) return;
+  if (reduced) {
+   setChars(SIGNATURE_TEXT.length);
+   setDone(true);
+   return;
+  }
+  timer.current = window.setInterval(() => {
+   setChars(prev => {
+    const next = prev + 1;
+    if (!muted) tick();
+    if (next >= SIGNATURE_TEXT.length) {
+     window.clearInterval(timer.current);
+     setDone(true);
+    }
+    return Math.min(next, SIGNATURE_TEXT.length);
+   });
+  }, 130);
+  return () => window.clearInterval(timer.current);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [started, reduced, muted]);
+ useEffect(() => () => {
+  window.clearInterval(timer.current);
+  void audio.current?.close().catch(() => undefined);
+ }, []);
+ return {chars, started, done, muted, setMuted, start, replay};
+}
 export function Sculpture() {
  const c=copy, canvas=useRef<HTMLCanvasElement>(null),angle=useRef(0.4),formRef=useRef(0),paint=useRef<()=>void>(()=>{});
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [playing,setPlaying]=useState(()=>!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [form,setForm]=useState(0);
+ const sig=useTypewriter(reduced);
+ const typed=SIGNATURE_TEXT.slice(0,sig.chars);
  useEffect(()=>{
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   const change=()=>{setReduced(media.matches);if(media.matches)setPlaying(false)};
@@ -60,7 +133,18 @@ export function Sculpture() {
   <button className="sculpture-button" aria-label={c.sculpture} onClick={switchForm} onKeyDown={event=>{
    if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();setPlaying(false);angle.current+=(event.key==='ArrowLeft'?-.15:.15);paint.current();}
   }}><canvas ref={canvas} aria-hidden="true"/><span className="sculpture-index">0{form+1} / ∞</span><span className="sculpture-cross">+</span></button>
+  <div className="signature-overlay" aria-hidden="true">
+   <p className="signature-type">{typed}<span className={'signature-caret'+(sig.done?' is-done':'')}/></p>
+   {sig.done&&<p className="signature-sub">{SIGNATURE_SUB}</p>}
+  </div>
   <p className="sculpture-hint">{c.sculptureHint}</p>
+  <p className="signature-live" role="status" aria-live="polite">{sig.started?(sig.done?'Signature complete.':`Signing… ${typed}`):''}</p>
+  <div className="signature-controls">
+   {!sig.started
+    ?<button className="text-action" onClick={sig.start}>▷ Play signature with sound</button>
+    :<><button className="text-action" onClick={sig.replay}>↺ Replay signature</button>
+   <button className="text-action" onClick={()=>sig.setMuted(m=>!m)} aria-pressed={sig.muted}>{sig.muted?'♪ Unmute keystrokes':'♪ Mute keystrokes'}</button></>}
+  </div>
   <div className="motion-controls"><span><i className={playing?'motion-dot is-live':'motion-dot'}/>{reduced?c.reduced:playing?c.running:c.paused}</span><button onClick={()=>setPlaying(v=>!v)}>{playing?'Ⅱ':'▷'} {playing?c.pause:c.play}</button><button onClick={()=>{angle.current=.4;formRef.current=0;setForm(0);setPlaying(false);paint.current()}}>{c.reset} ↺</button></div>
  </div>
 }

@@ -46,7 +46,7 @@ export const copy = {
   formSuccess:"Thanks — your message is on its way. I'll reply soon.", formFailed:'Something went wrong. Please email me directly.',
   formNetwork:'Network error. Please email me directly at ',
   print:'Print resume / Save PDF', footer:'Designed with judgment. Built with code.',
-  sculpture:'Interactive wire sculpture', specimen:'FORM STUDY 001', sculptureHint:'Click to change form · Focus and use ← → to rotate',
+  sculpture:'Interactive wire sculpture', specimen:'FORM STUDY 001', sculptureHint:'Click sculpture to change form · Focus and use ← → to rotate · Play the signature below',
   pause:'Pause motion', play:'Resume motion', reset:'Reset form', reduced:'Reduced motion enabled', paused:'Paused', running:'In motion',
   skip:'Skip to work', language:'Switch language', concept:'Case study', printable:'Resume summary',
   socialsLabel:'Elsewhere',
