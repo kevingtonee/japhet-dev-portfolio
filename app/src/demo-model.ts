@@ -115,3 +115,44 @@ export function gradeLetter(n:number){
  if(n>=40)return 'D';
  return 'E';
 }
+
+/* ---------------- Nuru AI · support copilot slice ----------------
+   Scripted preview of the retrieval interaction model: canned answers
+   with auditable sources, no live model calls. */
+export interface NuruAnswer{id:string;question:string;answer:string;sources:string[]}
+export const nuruAnswers:NuruAnswer[]=[
+ {id:'materials',question:'What materials do you use?',answer:'Pieces are made from gold-tone and recycled brass, plus sterling silver for the Rift Ring. Every listing names its material and finish on the product page.',sources:['Catalogue · product attributes','ILANA · materials policy']},
+ {id:'delivery',question:'How long does delivery take?',answer:'Nairobi orders arrive in 1–2 working days; the rest of Kenya in 2–4. You get a tracking message on WhatsApp once the rider picks up your parcel.',sources:['Policy · delivery & shipping']},
+ {id:'payment',question:'How do I pay?',answer:'Checkout sends an M-Pesa STK Push to your phone — you confirm with your PIN and the order is recorded the moment the callback lands. No card details are ever stored.',sources:['Policy · payments','Daraja · STK Push flow']},
+ {id:'returns',question:'Can I return a piece?',answer:'Yes — unworn pieces can be returned within 14 days for an exchange or refund. Message us on WhatsApp with your order code and we arrange the pickup.',sources:['Policy · returns & exchanges']},
+];
+export const nuruFallback:NuruAnswer={id:'handoff',question:'',answer:'I’m not confident about that one — I’d rather hand you to a human than guess. Tap below and the conversation continues on WhatsApp with full context.',sources:['Handoff · confidence below threshold']};
+export const nuruSuggestions:string[]=['What materials do you use?','How long does delivery take?','How do I pay?','Can I return a piece?'];
+export function nuruRespond(query:string):NuruAnswer{
+ const tokens=query.toLowerCase().split(/[^a-z]+/).filter(Boolean);
+ let best:NuruAnswer|null=null,score=0;
+ const vocab:Record<string,string[]>={materials:['material','materials','brass','gold','silver','quality','made'],delivery:['delivery','deliver','shipping','ship','arrive','long','days'],payment:['pay','payment','mpesa','m-pesa','stk','card','checkout'],returns:['return','returns','refund','exchange','back']};
+ for(const a of nuruAnswers){const words=vocab[a.id]||[];const s=tokens.filter(t=>words.includes(t)).length;if(s>score){score=s;best=a}}
+ return best||nuruFallback;
+}
+
+/* ---------------- GradeCast · linear model, exported weights ----------------
+   Weights from a small synthetic training set; the browser runs inference
+   directly — zero API calls, exactly what ships to Student Hub. */
+export interface GradeFeatures{coursework:number;attendance:number;study:number}
+export const gradeWeights={intercept:8,coursework:0.58,attendance:0.22,study:1.4};
+export const gradeFeatureMeta:{key:keyof GradeFeatures;label:string;hint:string;min:number;max:number;unit:string}[]=[
+ {key:'coursework',label:'Coursework average',hint:'CATs, assignments, labs',min:0,max:100,unit:'%'},
+ {key:'attendance',label:'Attendance',hint:'Classes actually attended',min:0,max:100,unit:'%'},
+ {key:'study',label:'Study hours / day',hint:'Outside lectures',min:0,max:8,unit:'h'},
+];
+export function predictGrade(f:GradeFeatures){
+ const raw=gradeWeights.intercept+gradeWeights.coursework*f.coursework+gradeWeights.attendance*f.attendance+gradeWeights.study*f.study;
+ return Math.max(0,Math.min(100,Math.round(raw*10)/10));
+}
+export function gradeMargin(f:GradeFeatures){
+ /* strongest single lever at the current point — honest interpretation aid */
+ const gains:[keyof GradeFeatures,number][]=[['coursework',gradeWeights.coursework*(100-f.coursework)],['attendance',gradeWeights.attendance*(100-f.attendance)],['study',gradeWeights.study*(8-f.study)]];
+ gains.sort((a,b)=>b[1]-a[1]);
+ return gains[0][0];
+}

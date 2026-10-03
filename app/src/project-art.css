@@ -165,3 +165,48 @@
  .project-demo .vm-app{grid-template-columns:1fr}
  .case-links a{width:100%;justify-content:space-between}
 }
+
+/* ---------------- Nuru AI · copilot slice ---------------- */
+.nu-app{display:flex;flex-direction:column;height:100%;min-height:0}
+.nu-body{display:flex;flex-direction:column;flex:1;min-height:0;padding:10px;gap:10px}
+.nu-thread{flex:1;min-height:120px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px}
+.nu-turn{display:flex;flex-direction:column;gap:6px}
+.nu-q{align-self:flex-end;background:#ffffff10;border:1px solid var(--line);border-radius:10px 10px 2px 10px;padding:7px 11px;font-size:11px;max-width:85%}
+.nu-a{align-self:flex-start;background:color-mix(in srgb,var(--accent-2) 8%,transparent);border:1px solid rgba(79,184,163,.25);border-radius:10px 10px 10px 2px;padding:9px 11px;max-width:92%}
+.nu-a>p{font-size:11px;line-height:1.65}
+.nu-sources{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.nu-sources span{font-size:8px;letter-spacing:.04em;color:var(--accent-2);border:1px solid rgba(79,184,163,.3);border-radius:4px;padding:2px 6px}
+.nu-handoff{display:inline-block;margin-top:7px;font-size:9px;color:var(--accent);letter-spacing:.04em}
+.nu-empty{font-size:11px;color:var(--muted);text-align:center;margin:auto}
+.nu-thinking{font-size:10px;color:var(--muted)}
+.nu-thinking .vm-dots i,.nu-thinking b{font-style:normal}
+.nu-suggest{display:flex;gap:6px;flex-wrap:wrap}
+.nu-suggest button,.nu-suggest span{font-size:9px;border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);min-height:32px}
+.nu-suggest button:hover{border-color:var(--accent);color:var(--ink)}
+.nu-composer{display:flex;gap:8px;align-items:center}
+.nu-composer input{flex:1;background:#0d0e12;border:1px solid var(--line);border-radius:8px;color:var(--ink);font:inherit;font-size:12px;padding:10px 12px;min-height:44px}
+.nu-composer input:focus{outline:none;border-color:var(--accent)}
+.nu-composer button{background:var(--ink);color:#111;border-radius:8px;font-size:11px;font-weight:600;padding:10px 16px;min-height:44px}
+.nu-composer>span,.nu-fake-btn{font-size:10px;color:var(--muted)}
+.nu-fake-btn{border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+
+/* ---------------- GradeCast · ML forecast slice ---------------- */
+.gc-app{display:flex;flex-direction:column;height:100%;min-height:0}
+.gc-body{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;flex:1;min-height:0;padding:12px}
+.gc-controls{display:flex;flex-direction:column;gap:12px;justify-content:center}
+.gc-field{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center}
+.gc-label b{font-size:11px;font-weight:550;display:block}
+.gc-label small{font-size:9px;color:var(--muted)}
+.gc-field input[type="range"]{grid-column:1/-1;width:100%;accent-color:var(--accent);min-height:28px;cursor:pointer}
+.gc-fake-range{grid-column:1/-1;height:4px;border-radius:2px;background:#ffffff14;overflow:hidden}
+.gc-fake-range i{display:block;height:100%;background:var(--accent)}
+.gc-value{font-size:12px;font-weight:600;color:var(--accent);text-align:right;font-variant-numeric:tabular-nums}
+.gc-result{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid var(--line);border-radius:10px;background:#ffffff06;text-align:center;padding:12px}
+.gc-result>small{font-size:8px;letter-spacing:.18em;color:var(--muted)}
+.gc-result>b{font-size:clamp(34px,6vw,52px);font-weight:600;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.gc-letter{font-size:11px;font-weight:700;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line);color:var(--muted)}
+.gc-letter.gc-A{color:var(--accent-2);border-color:rgba(79,184,163,.5)}
+.gc-letter.gc-B{color:var(--accent);border-color:rgba(201,154,63,.5)}
+.gc-result>p{font-size:9px;color:var(--muted);line-height:1.6;margin-top:6px}
+.gc-result>p strong{color:var(--ink)}
+@media(max-width:560px){.gc-body{grid-template-columns:1fr;overflow-y:auto}.gc-result{padding:14px}}

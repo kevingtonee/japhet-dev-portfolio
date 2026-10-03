@@ -3,7 +3,7 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import {it,expect} from 'vitest';
 import {ProjectArt,ProjectDemo} from '../src/ProjectArt';
 
-for(const id of ['ilana','remarket','vibemeet','studenthub']){
+for(const id of ['ilana','remarket','vibemeet','studenthub','nuru','gradecast']){
  it(id+' cover contains no nested interactive controls',()=>{
   const html=renderToStaticMarkup(createElement(ProjectArt,{id}));
   expect(html).not.toMatch(/<(button|input|textarea|a)\b/);

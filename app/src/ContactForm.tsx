@@ -49,6 +49,7 @@ export function ContactForm() {
  const statusClass=status==='success'?'form-note is-success':status==='error'?'form-note is-error':'form-note';
  return <form ref={formRef} className="contact-form" action={FORMSPREE_URL} method="POST" noValidate onSubmit={onSubmit}>
   <h3>{c.formTitle}</h3>
+  <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="form-honeypot"/>
   <div className={'form-field'+(errors.name?' has-error':'')}>
    <label htmlFor="contact-name">{c.formName}</label>
    <input id="contact-name" name="name" type="text" autoComplete="name" placeholder={c.formNamePlaceholder} required minLength={2} aria-invalid={!!errors.name} aria-describedby={errors.name?'contact-name-error':undefined} onBlur={()=>validateOne('name')} onInput={()=>{if(errors.name)validateOne('name')}}/>

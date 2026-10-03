@@ -1,5 +1,6 @@
 /* Release adaptation: touch targets and device safe areas, without changing cover art. */
 @media screen {
+  html, body { overflow-x: clip; }
   body {
     padding-top: env(safe-area-inset-top, 0px);
     padding-right: env(safe-area-inset-right, 0px);

@@ -1,5 +1,5 @@
 import {useState,type ReactNode} from 'react';
-import {addToCart,cartCount,cartTotal,formatKES,hubCourses,hubDayLabels,hubDays,hubSchedule,ilanaProducts,isValidOffer,averageGrade,gradeLetter,nextStk,orderCode,pickReply,remarketListings,searchListings,sellerReply,vibeChannels,vibeMembers,vibeThreads,type Cart,type HubDay,type StkState} from './demo-model';
+import {addToCart,cartCount,cartTotal,formatKES,hubCourses,hubDayLabels,hubDays,hubSchedule,ilanaProducts,isValidOffer,averageGrade,gradeLetter,nextStk,orderCode,pickReply,remarketListings,searchListings,sellerReply,vibeChannels,vibeMembers,vibeThreads,nuruAnswers,nuruFallback,nuruRespond,nuruSuggestions,gradeFeatureMeta,predictGrade,gradeMargin,type Cart,type GradeFeatures,type HubDay,type NuruAnswer,type StkState} from './demo-model';
 import './project-art.css';
 
 type DemoProps={interactive?:boolean};
@@ -153,11 +153,74 @@ function Studenthub({interactive=false}:DemoProps) {
  </div>;
 }
 
-const indexLabel:Record<string,string>={ilana:'01 / ADD TO CART · STK PUSH',remarket:'02 / SEARCH · OFFER · DEAL',vibemeet:'03 / REALTIME · PRESENCE',studenthub:'04 / TIMETABLE · GRADES'};
-const coverLabel:Record<string,string>={ilana:'E-COMMERCE · M-PESA',remarket:'MARKETPLACE · OFFERS',vibemeet:'SOCIAL · REALTIME',studenthub:'PLANNER · GRADES'};
+/* ---------------- Nuru AI · support copilot (scripted slice) ---------------- */
+interface NuruTurn{q:string;a:NuruAnswer}
+function Nuru({interactive=false}:DemoProps) {
+ const [turns,setTurns]=useState<NuruTurn[]>([]);
+ const [draft,setDraft]=useState('');
+ const [thinking,setThinking]=useState(false);
+ const shownTurns:NuruTurn[]=interactive?turns:[{q:nuruAnswers[1].question,a:nuruAnswers[1]}];
+ function ask(text:string){
+  const q=text.trim();
+  if(!q||thinking)return;
+  setDraft('');setThinking(true);
+  setTimeout(()=>{setTurns(t=>[...t,{q,a:nuruRespond(q)}]);setThinking(false)},700);
+ }
+ return <div className="nu-app">
+  <div className="mock-toolbar"><b>Nuru <span className="mock-symbol">AI</span></b><span>Support copilot · grounded in shop data</span><small>SCRIPTED · NO LIVE MODEL</small></div>
+  <div className="nu-body">
+   <div className="nu-thread" role={interactive?'log':undefined}>
+    {shownTurns.map((t,i)=><div key={i} className="nu-turn">
+     <p className="nu-q">{t.q}</p>
+     <div className="nu-a"><p>{t.a.answer}</p>
+      <div className="nu-sources">{t.a.sources.map(s=><span key={s}>▸ {s}</span>)}</div>
+      {t.a.id===nuruFallback.id&&<span className="nu-handoff">→ Hands off to WhatsApp</span>}
+     </div>
+    </div>)}
+    {!shownTurns.length&&<p className="nu-empty">Ask about materials, delivery, payment or returns.</p>}
+    {thinking&&<p className="nu-thinking">Retrieving from catalogue<i className="vm-dots"><b>.</b><b>.</b><b>.</b></i></p>}
+   </div>
+   <div className="nu-suggest">{nuruSuggestions.map(s=>interactive?<button key={s} onClick={()=>ask(s)}>{s}</button>:<span key={s}>{s}</span>)}</div>
+   <div className="nu-composer">
+    {interactive?<><input value={draft} aria-label="Ask the copilot" placeholder="Ask a customer question…" onChange={e=>setDraft(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.nativeEvent.isComposing)ask(draft)}}/><button onClick={()=>ask(draft)}>Ask</button></>:<><span>Ask a customer question…</span><span className="nu-fake-btn">Ask</span></>}
+   </div>
+  </div>
+ </div>;
+}
+/* ---------------- GradeCast · ML grade forecast ---------------- */
+function Gradecast({interactive=false}:DemoProps) {
+ const [features,setFeatures]=useState<GradeFeatures>({coursework:72,attendance:84,study:3});
+ const shown=interactive?features:{coursework:72,attendance:84,study:3};
+ const grade=predictGrade(shown),lever=gradeMargin(shown);
+ const leverLabel=gradeFeatureMeta.find(m=>m.key===lever)?.label||'';
+ return <div className="gc-app">
+  <div className="mock-toolbar"><b>Grade<span className="mock-symbol">Cast</span></b><span>Linear model · runs in your browser</span><small>SYNTHETIC TRAINING DATA</small></div>
+  <div className="gc-body">
+   <div className="gc-controls">
+    {gradeFeatureMeta.map(m=><div key={m.key} className="gc-field">
+     <div className="gc-label"><b>{m.label}</b><small>{m.hint}</small></div>
+     {interactive?<input type="range" min={m.min} max={m.max} step={m.key==='study'?0.5:1} value={shown[m.key]} aria-label={m.label} onChange={e=>setFeatures({...features,[m.key]:Number(e.target.value)})}/>:<div className="gc-fake-range"><i style={{width:(shown[m.key]/m.max*100)+'%'}}/></div>}
+     <span className="gc-value">{shown[m.key]}{m.unit}</span>
+    </div>)}
+   </div>
+   <div className="gc-result">
+    <small>FORECAST · FINAL GRADE</small>
+    <b>{grade}</b>
+    <span className={'gc-letter gc-'+gradeLetter(grade)}>{gradeLetter(grade)}</span>
+    <p>Biggest lever right now: <strong>{leverLabel.toLowerCase()}</strong></p>
+   </div>
+  </div>
+ </div>;
+}
+
+const demos:Record<string,(props:DemoProps)=>ReactNode>={ilana:Ilana,remarket:Remarket,vibemeet:Vibemeet,studenthub:Studenthub,nuru:Nuru,gradecast:Gradecast};
+const indexLabel:Record<string,string>={ilana:'01 / ADD TO CART · STK PUSH',remarket:'02 / SEARCH · OFFER · DEAL',vibemeet:'03 / REALTIME · PRESENCE',studenthub:'04 / TIMETABLE · GRADES',nuru:'05 / RAG · TOOL-USE · HANDOFF',gradecast:'06 / LINEAR MODEL · IN-BROWSER'};
+const coverLabel:Record<string,string>={ilana:'E-COMMERCE · M-PESA',remarket:'MARKETPLACE · OFFERS',vibemeet:'SOCIAL · REALTIME',studenthub:'PLANNER · GRADES',nuru:'AI · SUPPORT COPILOT',gradecast:'ML · GRADE FORECAST'};
 export function ProjectArt({id}:{id:string}) {
- return <div className={'project-visual mock-cover mock-'+id} aria-hidden="true"><div className="mock-cover-label"><span>{id.toUpperCase()} / {coverLabel[id]||'CASE'}</span><span>DESIGNED & CODED</span></div><div className="mock-cover-app">{id==='ilana'?<Ilana/>:id==='remarket'?<Remarket/>:id==='vibemeet'?<Vibemeet/>:<Studenthub/>}</div><span className="mock-cover-index">{indexLabel[id]||''}</span></div>;
+ const Cover=demos[id]||Studenthub;
+ return <div className={'project-visual mock-cover mock-'+id} aria-hidden="true"><div className="mock-cover-label"><span>{id.toUpperCase()} / {coverLabel[id]||'CASE'}</span><span>DESIGNED & CODED</span></div><div className="mock-cover-app"><Cover/></div><span className="mock-cover-index">{indexLabel[id]||''}</span></div>;
 }
 export function ProjectDemo({id}:{id:string}) {
- return <div className={'project-demo demo-'+id}>{id==='ilana'?<Ilana interactive/>:id==='remarket'?<Remarket interactive/>:id==='vibemeet'?<Vibemeet interactive/>:<Studenthub interactive/>}</div>;
+ const Demo=demos[id]||Studenthub;
+ return <div className={'project-demo demo-'+id}><Demo interactive/></div>;
 }

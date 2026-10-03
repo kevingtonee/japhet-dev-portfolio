@@ -1,0 +1,57 @@
+/* 3D project carousel — pure CSS transforms, no animation library. */
+.carousel{position:relative}
+.carousel-stage{position:relative;height:660px;perspective:1500px;perspective-origin:50% 42%;touch-action:pan-y;outline-offset:4px}
+.carousel-slide{position:absolute;left:50%;top:0;width:min(620px,100%);transform-style:preserve-3d;transition:transform .7s var(--ease),opacity .55s var(--ease),filter .55s var(--ease);will-change:transform}
+.carousel-slide.pos-0{transform:translateX(-50%) translateZ(70px);z-index:6;opacity:1}
+.carousel-slide.pos-prev{transform:translateX(calc(-50% - 56%)) translateZ(-160px) rotateY(17deg) scale(.82);z-index:4;opacity:.5;filter:saturate(.7)}
+.carousel-slide.pos-next{transform:translateX(calc(-50% + 56%)) translateZ(-160px) rotateY(-17deg) scale(.82);z-index:4;opacity:.5;filter:saturate(.7)}
+.carousel-slide.pos-prev-far{transform:translateX(calc(-50% - 104%)) translateZ(-320px) rotateY(24deg) scale(.66);z-index:2;opacity:.16}
+.carousel-slide.pos-next-far{transform:translateX(calc(-50% + 104%)) translateZ(-320px) rotateY(-24deg) scale(.66);z-index:2;opacity:.16}
+.carousel-slide.pos-hidden{transform:translateX(-50%) translateZ(-480px) scale(.5);z-index:0;opacity:0;pointer-events:none}
+.carousel-card{transition:transform .28s ease-out;transform-style:preserve-3d}
+.carousel-open{display:block;width:100%;padding:0;text-align:left;background:#151417;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 24px 70px #0007;transition:border-color .25s,box-shadow .25s}
+.pos-0 .carousel-open:hover{border-color:rgba(237,238,242,.3);box-shadow:0 30px 90px #000a}
+.pos-0 .carousel-open:hover .carousel-explore{color:var(--accent)}
+.carousel-open .project-visual{border-radius:0;aspect-ratio:1.9}
+.carousel-info{padding:18px 22px 20px}
+.carousel-title-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.carousel-title-row h3{font-size:24px;font-weight:520;letter-spacing:-.04em}
+.carousel-title-row .project-year{margin-left:0}
+.carousel-status{margin-left:auto;font-size:9px;letter-spacing:.09em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.carousel-status.is-live{color:var(--accent-2);border-color:rgba(79,184,163,.4)}
+.carousel-status.is-building{color:var(--accent);border-color:rgba(201,154,63,.4)}
+.carousel-info .project-headline{margin-top:8px}
+.carousel-fingerprint{display:flex;gap:10px;align-items:baseline;margin-top:12px;font-size:10px;letter-spacing:.04em;color:var(--muted);flex-wrap:wrap}
+.carousel-fingerprint>span{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.carousel-explore{margin-top:14px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.carousel-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.carousel-controls{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:26px}
+.carousel-arrow{width:48px;height:48px;border:1px solid var(--line);border-radius:50%;font-size:17px;color:var(--muted);transition:all .2s var(--ease)}
+.carousel-arrow:hover{border-color:var(--accent);color:var(--ink);transform:translateY(-2px)}
+.carousel-dots{display:flex;gap:8px}
+.carousel-dots button{width:22px;height:4px;min-height:0;border-radius:2px;background:rgba(237,238,242,.16);padding:8px 0;background-clip:content-box;transition:background .25s}
+.carousel-dots button.is-current{background:var(--accent);background-clip:content-box}
+.carousel-dots button:hover{background:rgba(237,238,242,.45);background-clip:content-box}
+/* Reduced motion: a calm fade, no 3D, no autoplay (JS also stops it). */
+.carousel.is-reduced .carousel-stage{perspective:none}
+.carousel.is-reduced .carousel-slide{transition:opacity .3s ease;transform:translateX(-50%)}
+.carousel.is-reduced .carousel-slide:not(.pos-0){opacity:0;pointer-events:none}
+@media(max-width:1050px){
+ .carousel-stage{height:600px;perspective:1100px}
+ .carousel-slide.pos-prev{transform:translateX(calc(-50% - 62%)) translateZ(-140px) rotateY(15deg) scale(.8)}
+ .carousel-slide.pos-next{transform:translateX(calc(-50% + 62%)) translateZ(-140px) rotateY(-15deg) scale(.8)}
+}
+@media(max-width:700px){
+ .carousel-stage{height:520px;perspective:900px;perspective-origin:50% 40%}
+ .carousel-slide{width:88%}
+ .carousel-slide.pos-prev{transform:translateX(calc(-50% - 76%)) translateZ(-120px) rotateY(12deg) scale(.82);opacity:.32}
+ .carousel-slide.pos-next{transform:translateX(calc(-50% + 76%)) translateZ(-120px) rotateY(-12deg) scale(.82);opacity:.32}
+ .carousel-slide.pos-prev-far,.carousel-slide.pos-next-far{opacity:0;pointer-events:none}
+ .carousel-open .project-visual{aspect-ratio:1.7}
+ .carousel-info{padding:14px 16px 16px}
+ .carousel-title-row h3{font-size:20px}
+ .carousel-status{margin-left:0}
+ .carousel-controls{margin-top:18px}
+ .carousel-arrow{width:44px;height:44px}
+}
+@media(max-width:400px){.carousel-stage{height:490px}}

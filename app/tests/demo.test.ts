@@ -63,3 +63,38 @@ describe('project link integrity',()=>{
   const shots=projects.filter(p=>p.shot).map(p=>p.id);expect(shots).toEqual(['ilana','remarket']);
  });
 });
+
+import {nuruAnswers,nuruFallback,nuruRespond,nuruSuggestions,gradeFeatureMeta,predictGrade,gradeMargin} from '../src/demo-model';
+
+describe('Nuru AI copilot model',()=>{
+ it('answers grounded questions with sources',()=>{
+  for(const a of nuruAnswers){expect(a.answer).toBeTruthy();expect(a.sources.length).toBeGreaterThan(0)}
+ });
+ it('matches delivery and payment questions to the right answers',()=>{
+  expect(nuruRespond('how long does shipping take?').id).toBe('delivery');
+  expect(nuruRespond('can I pay with m-pesa?').id).toBe('payment');
+ });
+ it('falls back to a human handoff instead of guessing',()=>{
+  expect(nuruRespond('quantum chromodynamics?')).toBe(nuruFallback);
+  expect(nuruFallback.answer).toContain('WhatsApp');
+ });
+ it('every suggestion resolves to a grounded answer',()=>{
+  for(const s of nuruSuggestions)expect(nuruRespond(s).id).not.toBe('handoff');
+ });
+});
+describe('GradeCast forecast model',()=>{
+ it('stays within 0–100 for extreme inputs',()=>{
+  expect(predictGrade({coursework:0,attendance:0,study:0})).toBeGreaterThanOrEqual(0);
+  expect(predictGrade({coursework:100,attendance:100,study:8})).toBeLessThanOrEqual(100);
+ });
+ it('rewards better habits with better grades',()=>{
+  expect(predictGrade({coursework:90,attendance:95,study:5})).toBeGreaterThan(predictGrade({coursework:40,attendance:50,study:1}));
+ });
+ it('suggests the lever with the most headroom',()=>{
+  expect(gradeMargin({coursework:40,attendance:95,study:6})).toBe('coursework');
+  expect(gradeMargin({coursework:95,attendance:95,study:1})).toBe('study');
+ });
+ it('describes every feature honestly',()=>{
+  for(const m of gradeFeatureMeta){expect(m.max).toBeGreaterThan(m.min);expect(m.label).toBeTruthy()}
+ });
+});

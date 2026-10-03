@@ -1,0 +1,18 @@
+/* Command palette — developer-oriented overlay, quiet and fast. */
+.palette-overlay{position:fixed;inset:0;z-index:40;background:#000a;backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-start;padding:12vh 20px 20px;animation:palette-in .16s ease-out}
+@keyframes palette-in{from{opacity:0}}
+.palette{width:min(560px,100%);background:#151417;border:1px solid var(--line);border-radius:14px;box-shadow:0 32px 100px #000c;overflow:hidden;animation:palette-pop .18s var(--ease)}
+@keyframes palette-pop{from{transform:translateY(-8px) scale(.98);opacity:0}}
+.palette-input-row{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.palette-input-row>span{color:var(--accent);font-size:16px}
+.palette-input-row input{flex:1;background:none;border:0;color:var(--ink);font:inherit;font-size:14px;min-height:28px}
+.palette-input-row input:focus{outline:none}
+.palette-input-row kbd{font-family:inherit;font-size:9px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:3px 7px}
+.palette ul{list-style:none;margin:0;padding:8px;max-height:min(46vh,380px);overflow-y:auto}
+.palette li[role="option"] button{display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%;padding:12px 14px;border-radius:8px;font-size:13px;color:var(--ink);text-align:left}
+.palette li[role="option"] small{font-size:10px;color:var(--muted);letter-spacing:.04em;white-space:nowrap}
+.palette li[aria-selected="true"] button{background:#ffffff0d}
+.palette li[aria-selected="true"] button small{color:var(--accent)}
+.palette-empty{padding:22px 14px;font-size:12px;color:var(--muted);list-style:none}
+.palette-hint{margin:0;padding:10px 18px;border-top:1px solid var(--line);font-size:9px;letter-spacing:.06em;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.palette-overlay,.palette{animation:none}}
