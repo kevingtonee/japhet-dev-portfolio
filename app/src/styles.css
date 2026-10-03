@@ -11,9 +11,23 @@
 .signature-caret.is-small{width:.5em;height:.95em;vertical-align:-.12em}
 @keyframes caret-blink{50%{opacity:0}}
 .signature-sub{margin-top:6px;font-size:11px;letter-spacing:.22em;color:var(--accent);min-height:1.6em}
-.signature-orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
-.signature-orbit-text{font-size:10px;letter-spacing:.42em;color:rgba(237,238,242,.55);text-transform:uppercase;animation:orbit-spin 26s linear infinite}
+.signature-kicker{font-size:8px;letter-spacing:.34em;color:var(--muted);margin-bottom:8px}
+.skill-badge{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 10px;border-radius:16px;border:1px solid var(--chip-color,#c99a3f);background:color-mix(in srgb,var(--chip-color,#c99a3f) 16%,transparent);box-shadow:0 0 26px color-mix(in srgb,var(--chip-color,#c99a3f) 55%,transparent),inset 0 0 14px #0009;animation:badge-pop .35s var(--ease),badge-float 3.2s ease-in-out infinite}
+.skill-glyph{font-size:22px;line-height:1;filter:drop-shadow(0 2px 8px #000c)}
+@keyframes badge-pop{from{transform:scale(.6);opacity:0}}
+@keyframes badge-float{50%{transform:translateY(-6px)}}
+.skill-type{background:linear-gradient(100deg,var(--ink) 30%,var(--chip-color,#c99a3f) 50%,var(--ink) 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:skill-sheen 2.6s linear infinite}
+.skill-type.is-glow{filter:drop-shadow(0 0 14px color-mix(in srgb,var(--chip-color,#c99a3f) 70%,transparent))}
+@keyframes skill-sheen{to{background-position:-220% 0}}
+.skill-progress{display:flex;gap:6px;justify-content:center;margin-top:12px}
+.skill-progress i{width:18px;height:3px;border-radius:2px;background:rgba(237,238,242,.14);transition:background .3s,box-shadow .3s}
+.skill-progress i.is-current{background:var(--chip-color,#c99a3f);box-shadow:0 0 10px var(--chip-color,#c99a3f)}
+.signature-orbit{position:absolute;inset:6% 4%;pointer-events:none;animation:orbit-spin 30s linear infinite}
+.orbit-chip{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--chip-color);background:#0d0e12ee;color:var(--chip-color);transform:rotate(var(--orbit-angle)) translateX(min(30vw,230px)) rotate(calc(var(--orbit-angle) * -1));opacity:.55;transition:opacity .3s,box-shadow .3s,transform .3s}
+.orbit-chip i{font-style:normal;font-size:15px}
+.orbit-chip.is-active{opacity:1;box-shadow:0 0 18px var(--chip-color)}
 @keyframes orbit-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.signature-orbit,.skill-badge,.skill-type{animation:none}.skill-type{color:var(--ink);background:none}}
 .signature-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .signature-controls{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:8px;flex-wrap:wrap}
 .signature-controls .text-action{font-size:10px;min-height:40px}

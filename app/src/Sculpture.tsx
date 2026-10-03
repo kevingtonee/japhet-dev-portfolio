@@ -2,26 +2,36 @@ import {useEffect,useRef,useState} from 'react';
 import {copy} from './content';
 import {surfacePoint} from './model';
 
-/* Continuous signature loop, drawn ON the sculpture:
-   types name → types role → holds → erases → repeats forever, starting on
-   every page load. Sound is a soft per-keystroke WebAudio tick. Browsers
-   block audio before the first tap/click, so the visual loop starts
-   immediately while sound unlocks on first interaction (with a mute toggle).
-   prefers-reduced-motion shows the full static signature instead of looping. */
-const TYPE_MS = 115;
-const ROLE_MS = 48;
-const HOLD_MS = 2300;
-const ERASE_MS = 26;
-const GAP_MS = 650;
-type Phase = 'typing-name' | 'typing-role' | 'holding' | 'erasing' | 'gap';
-function useSignatureLoop(reduced: boolean, name: string, role: string) {
- const [nameChars, setNameChars] = useState(reduced ? name.length : 0);
- const [roleChars, setRoleChars] = useState(reduced ? role.length : 0);
- const [phase, setPhase] = useState<Phase>(reduced ? 'holding' : 'typing-name');
+/* Skill-typewriter on the sculpture: cycles skill → types its name with a
+   code-drawn logo badge → holds in a glow sweep → erases → next skill,
+   forever, starting on every page load. Logos are inline SVG (zero network,
+   zero video files — all effects are CSS/canvas). Sound is a soft WebAudio
+   tick; browsers block audio pre-gesture so it unlocks on first tap/keypress.
+   prefers-reduced-motion shows one static skill instead of looping. */
+const SKILL_TYPE_MS = 85;
+const SKILL_HOLD_MS = 2100;
+const SKILL_ERASE_MS = 30;
+const SKILL_GAP_MS = 500;
+interface Skill { name: string; tag: string; color: string; glyph: string }
+const SKILLS: Skill[] = [
+ {name: 'TypeScript', tag: 'TYPED JS · FRONTEND', color: '#3178c6', glyph: 'TS'},
+ {name: 'React', tag: 'UI · COMPONENTS', color: '#61dafb', glyph: '⚛'},
+ {name: 'Next.js', tag: 'FULL-STACK · SSR', color: '#edeef2', glyph: '▲'},
+ {name: 'Node.js', tag: 'APIS · BACKEND', color: '#68a063', glyph: '⬢'},
+ {name: 'PostgreSQL', tag: 'DATA · RELATIONAL', color: '#5f7fae', glyph: '🐘'},
+ {name: 'M-Pesa Daraja', tag: 'PAYMENTS · STK PUSH', color: '#4fb8a3', glyph: '₮'},
+ {name: 'Python', tag: 'ML · AUTOMATION', color: '#c9a35f', glyph: '🐍'},
+ {name: 'Supabase', tag: 'REALTIME · AUTH', color: '#3ecf8e', glyph: '⚡'},
+];
+type SkillPhase = 'typing' | 'holding' | 'erasing' | 'gap';
+function useSkillLoop(reduced: boolean) {
+ const [index, setIndex] = useState(0);
+ const [chars, setChars] = useState(reduced ? SKILLS[0].name.length : 0);
+ const [phase, setPhase] = useState<SkillPhase>(reduced ? 'holding' : 'typing');
  const [muted, setMuted] = useState(false);
  const [soundOn, setSoundOn] = useState(false);
  const audio = useRef<AudioContext | null>(null);
- const state = useRef({nameChars: reduced ? name.length : 0, roleChars: reduced ? role.length : 0, phase: (reduced ? 'holding' : 'typing-name') as Phase});
+ const state = useRef({index: 0, chars: reduced ? SKILLS[0].name.length : 0, phase: (reduced ? 'holding' : 'typing') as SkillPhase});
  function blip(erasing = false) {
   if (muted || !soundOn) return;
   try {
@@ -34,8 +44,8 @@ function useSignatureLoop(reduced: boolean, name: string, role: string) {
    if (ctx.state === 'suspended') { void ctx.resume(); return; }
    const osc = ctx.createOscillator();
    const gain = ctx.createGain();
-   osc.type = 'sine';
-   osc.frequency.value = (erasing ? 420 : 640) + Math.random() * 200;
+   osc.type = 'triangle';
+   osc.frequency.value = (erasing ? 380 : 600) + Math.random() * 240;
    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
    gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.012);
    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
@@ -44,7 +54,6 @@ function useSignatureLoop(reduced: boolean, name: string, role: string) {
    osc.stop(ctx.currentTime + 0.08);
   } catch { /* decorative — never break the loop */ }
  }
- /* Unlock sound on first visitor gesture (autoplay policy). */
  useEffect(() => {
   const unlock = () => {
    try {
@@ -63,59 +72,51 @@ function useSignatureLoop(reduced: boolean, name: string, role: string) {
    window.removeEventListener('keydown', unlock);
   };
  }, []);
- /* The loop itself. */
  useEffect(() => {
   if (reduced) {
-   state.current = {nameChars: name.length, roleChars: role.length, phase: 'holding'};
-   setNameChars(name.length);
-   setRoleChars(role.length);
+   state.current = {index: 0, chars: SKILLS[0].name.length, phase: 'holding'};
+   setIndex(0);
+   setChars(SKILLS[0].name.length);
    setPhase('holding');
    return;
   }
-  let delay = TYPE_MS;
   const s = state.current;
-  if (s.phase === 'typing-name') delay = TYPE_MS;
-  else if (s.phase === 'typing-role') delay = ROLE_MS;
-  else if (s.phase === 'holding') delay = HOLD_MS;
-  else if (s.phase === 'erasing') delay = ERASE_MS;
-  else delay = GAP_MS;
+  const delay = s.phase === 'typing' ? SKILL_TYPE_MS : s.phase === 'holding' ? SKILL_HOLD_MS : s.phase === 'erasing' ? SKILL_ERASE_MS : SKILL_GAP_MS;
   const t = window.setTimeout(() => {
    const cur = state.current;
-   if (cur.phase === 'typing-name') {
-    cur.nameChars += 1;
+   const skill = SKILLS[cur.index];
+   if (cur.phase === 'typing') {
+    cur.chars += 1;
     blip();
-    setNameChars(cur.nameChars);
-    if (cur.nameChars >= name.length) { cur.phase = 'typing-role'; setPhase('typing-role'); }
-   } else if (cur.phase === 'typing-role') {
-    cur.roleChars += 1;
-    blip();
-    setRoleChars(cur.roleChars);
-    if (cur.roleChars >= role.length) { cur.phase = 'holding'; setPhase('holding'); }
+    setChars(cur.chars);
+    if (cur.chars >= skill.name.length) { cur.phase = 'holding'; setPhase('holding'); }
    } else if (cur.phase === 'holding') {
     cur.phase = 'erasing'; setPhase('erasing');
    } else if (cur.phase === 'erasing') {
-    if (cur.roleChars > 0) { cur.roleChars -= 1; setRoleChars(cur.roleChars); blip(true); }
-    else if (cur.nameChars > 0) { cur.nameChars -= 1; setNameChars(cur.nameChars); blip(true); }
-    else { cur.phase = 'gap'; setPhase('gap'); }
+    cur.chars -= 1;
+    blip(true);
+    setChars(Math.max(cur.chars, 0));
+    if (cur.chars <= 0) { cur.phase = 'gap'; setPhase('gap'); }
    } else {
-    cur.phase = 'typing-name'; setPhase('typing-name');
+    cur.index = (cur.index + 1) % SKILLS.length;
+    setIndex(cur.index);
+    cur.phase = 'typing'; setPhase('typing');
    }
   }, delay);
   return () => window.clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [reduced, name, role, nameChars, roleChars, phase, muted, soundOn]);
+ }, [reduced, index, chars, phase, muted, soundOn]);
  useEffect(() => () => { void audio.current?.close().catch(() => undefined); }, []);
- return {nameChars, roleChars, phase, muted, setMuted, soundOn};
+ return {skill: SKILLS[index], index, chars, phase, muted, setMuted, soundOn};
 }
 export function Sculpture() {
  const c=copy, canvas=useRef<HTMLCanvasElement>(null),angle=useRef(0.4),formRef=useRef(0),paint=useRef<()=>void>(()=>{});
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [playing,setPlaying]=useState(()=>!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  const [form,setForm]=useState(0);
- const sig=useSignatureLoop(reduced, c.roman, c.role.toUpperCase());
- const typedName=c.roman.slice(0,sig.nameChars);
- const typedRole=c.role.toUpperCase().slice(0,sig.roleChars);
- const showCaret=sig.phase==='typing-name'||sig.phase==='typing-role';
+ const sig=useSkillLoop(reduced);
+ const typedSkill=sig.skill.name.slice(0,sig.chars);
+ const showCaret=sig.phase==='typing';
  useEffect(()=>{
   const media=window.matchMedia('(prefers-reduced-motion: reduce)');
   const change=()=>{setReduced(media.matches);if(media.matches)setPlaying(false)};
@@ -170,13 +171,18 @@ export function Sculpture() {
   <button className="sculpture-button" aria-label={c.sculpture} onClick={switchForm} onKeyDown={event=>{
    if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();setPlaying(false);angle.current+=(event.key==='ArrowLeft'?-.15:.15);paint.current();}
   }}><canvas ref={canvas} aria-hidden="true"/><span className="sculpture-index">0{form+1} / ∞</span><span className="sculpture-cross">+</span></button>
-  <div className="signature-orbit" aria-hidden="true"><span className="signature-orbit-text">{c.roman} ✳ {c.role.toUpperCase()} ✳ </span></div>
+  <div className="signature-orbit" aria-hidden="true">
+   {SKILLS.map((s,i)=><span key={s.name} className={'orbit-chip'+(i===sig.index?' is-active':'')} style={{['--orbit-angle' as string]:`${(i/SKILLS.length)*360}deg`,['--chip-color' as string]:s.color}}><i>{s.glyph}</i></span>)}
+  </div>
   <div className="signature-overlay" aria-hidden="true">
-   <p className="signature-type">{typedName}{showCaret&&<span className="signature-caret"/>}</p>
-   <p className="signature-sub">{typedRole}{sig.phase==='typing-role'&&<span className="signature-caret is-small"/>}</p>
+   <p className="signature-kicker">NOW TYPING · {String(sig.index+1).padStart(2,'0')}/{String(SKILLS.length).padStart(2,'0')}</p>
+   <p className="skill-badge" style={{['--chip-color' as string]:sig.skill.color}}><span className="skill-glyph">{sig.skill.glyph}</span></p>
+   <p className={'signature-type skill-type'+(sig.phase==='holding'?' is-glow':'')} key={sig.skill.name}>{typedSkill}{showCaret&&<span className="signature-caret"/>}</p>
+   <p className="signature-sub">{sig.skill.tag}</p>
+   <div className="skill-progress" aria-hidden="true">{SKILLS.map((s,i)=><i key={s.name} className={i===sig.index?'is-current':i<sig.index||(sig.index===0&&false)?'is-seen':''}/>)}</div>
   </div>
   <p className="sculpture-hint">{c.sculptureHint}</p>
-  <p className="signature-live" role="status">{c.roman} — {c.role}</p>
+  <p className="signature-live" role="status">{sig.skill.name} — {sig.skill.tag}</p>
   <div className="signature-controls">
    <button className="text-action" onClick={()=>sig.setMuted(m=>!m)} aria-pressed={sig.muted}>{sig.muted?'♪ Unmute typing sound':'♪ Mute typing sound'}</button>
    {!sig.soundOn&&<span className="signature-sound-note">Sound starts on first tap / keypress</span>}
