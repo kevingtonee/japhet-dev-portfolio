@@ -2,7 +2,7 @@
 
 Personal portfolio site. Full-stack and AI engineer.
 
-**Live:** https://japhet-dev-portfolio.vercel.app/
+**Live:** https://japhet-dev-portfolio-chi.vercel.app/
 
 ## Stack
 
