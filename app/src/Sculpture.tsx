@@ -6,7 +6,7 @@ import {globePoint,rotateX,rotateY,fibonacciLatLon} from './model';
    its surface as clickable chips. The skill typewriter is kept — typing a name
    highlights its chip, and clicking / focusing a chip pins that skill.
    Zero network, zero 3D deps — all effects are canvas 2D + CSS.
-   Sound is a soft WebAudio tick; browsers block audio pre-gesture so it
+   Sound is a subtle synthesized key click; browsers block audio pre-gesture so it
    unlocks on first tap/keypress. prefers-reduced-motion shows one static
    frame instead of looping. */
 const SKILL_TYPE_MS = 85;
@@ -37,7 +37,7 @@ function useSkillLoop(reduced: boolean) {
   state.current = {index: next, chars: 0, phase: 'typing'};
   setIndex(next); setChars(0); setPhase('typing');
  }
- function blip(erasing = false) {
+ function typeClick() {
   if (muted || !soundOn) return;
   try {
    if (!audio.current) {
@@ -47,16 +47,36 @@ function useSkillLoop(reduced: boolean) {
    }
    const ctx = audio.current;
    if (ctx.state === 'suspended') { void ctx.resume(); return; }
-   const osc = ctx.createOscillator();
+
+   const now = ctx.currentTime;
+   const duration = 0.032;
+   const buffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * duration)), ctx.sampleRate);
+   const data = buffer.getChannelData(0);
+   for (let i = 0; i < data.length; i++) {
+    const decay = 1 - i / data.length;
+    data[i] = (Math.random() * 2 - 1) * decay * decay;
+   }
+
+   const noise = ctx.createBufferSource();
+   noise.buffer = buffer;
+
+   const bandpass = ctx.createBiquadFilter();
+   bandpass.type = 'bandpass';
+   bandpass.frequency.value = 2200 + Math.random() * 900;
+   bandpass.Q.value = 1.2;
+
+   const highpass = ctx.createBiquadFilter();
+   highpass.type = 'highpass';
+   highpass.frequency.value = 500;
+
    const gain = ctx.createGain();
-   osc.type = 'triangle';
-   osc.frequency.value = (erasing ? 380 : 600) + Math.random() * 240;
-   gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-   gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.012);
-   gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.06);
-   osc.connect(gain).connect(ctx.destination);
-   osc.start();
-   osc.stop(ctx.currentTime + 0.08);
+   gain.gain.setValueAtTime(0.0001, now);
+   gain.gain.exponentialRampToValueAtTime(0.028, now + 0.003);
+   gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+   noise.connect(highpass).connect(bandpass).connect(gain).connect(ctx.destination);
+   noise.start(now);
+   noise.stop(now + duration);
   } catch { /* decorative — never break the loop */ }
  }
  useEffect(() => {
@@ -92,14 +112,13 @@ function useSkillLoop(reduced: boolean) {
    const skill = SKILLS[cur.index];
    if (cur.phase === 'typing') {
     cur.chars += 1;
-    blip();
+    typeClick();
     setChars(cur.chars);
     if (cur.chars >= skill.name.length) { cur.phase = 'holding'; setPhase('holding'); }
    } else if (cur.phase === 'holding') {
     cur.phase = 'erasing'; setPhase('erasing');
    } else if (cur.phase === 'erasing') {
     cur.chars -= 1;
-    blip(true);
     setChars(Math.max(cur.chars, 0));
     if (cur.chars <= 0) { cur.phase = 'gap'; setPhase('gap'); }
    } else {
@@ -259,7 +278,7 @@ export function Sculpture() {
   <p className="sculpture-hint">{c.sculptureHint}</p>
   <p className="signature-live" role="status">{sig.skill.name} — {sig.skill.tag}</p>
   <div className="signature-controls">
-   <button className="text-action" onClick={()=>sig.setMuted(m=>!m)} aria-pressed={sig.muted}>{sig.muted?'♪ Unmute typing sound':'♪ Mute typing sound'}</button>
+   <button className="text-action" onClick={()=>sig.setMuted(m=>!m)} aria-pressed={sig.muted}>{sig.muted?'♪ Unmute typing clicks':'♪ Mute typing clicks'}</button>
    {!sig.soundOn&&<span className="signature-sound-note">Sound starts on first tap / keypress</span>}
   </div>
   <div className="motion-controls"><span><i className={playing?'motion-dot is-live':'motion-dot'}/>{reduced?c.reduced:playing?c.running:c.paused}</span><button onClick={()=>setPlaying(v=>!v)}>{playing?'Ⅱ':'▷'} {playing?c.pause:c.play}</button><button onClick={()=>{angle.current=.4;tilt.current=.42;formRef.current=0;pinned.current=null;setForm(0);setPlaying(false);sig.jumpTo(0);paint.current()}}>{c.reset} ↺</button></div>

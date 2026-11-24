@@ -12,6 +12,13 @@ function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return <span aria-hidden="true">{diagonal ? '↗' : '↘'}</span>;
 }
 
+function SocialIcon({ kind }: { kind: 'github' | 'linkedin' | 'whatsapp' }) {
+  const common = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true, focusable: 'false' as const };
+  if (kind === 'github') return <svg {...common}><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.46-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.36 1.08 2.94.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>;
+  if (kind === 'linkedin') return <svg {...common}><path d="M6.94 8.5a1.56 1.56 0 1 1 0-3.12 1.56 1.56 0 0 1 0 3.12ZM5.6 9.9h2.68V18H5.6V9.9Zm4.36 0h2.56v1.1h.04c.36-.67 1.22-1.38 2.52-1.38 2.7 0 3.2 1.78 3.2 4.08V18h-2.68v-3.8c0-.9-.02-2.06-1.26-2.06-1.26 0-1.46.98-1.46 2v3.86H9.96V9.9Z"/></svg>;
+  return <svg {...common}><path d="M20.52 3.48A11.8 11.8 0 0 0 12.03 0C5.5 0 .2 5.3.2 11.82c0 2.08.54 4.12 1.58 5.92L.1 24l6.42-1.64a11.8 11.8 0 0 0 5.5 1.37h.01c6.52 0 11.82-5.3 11.83-11.82 0-3.16-1.23-6.13-3.34-8.43ZM12.03 21.3h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.81.97 1.02-3.72-.24-.38a9.78 9.78 0 0 1-1.5-5.22c0-5.4 4.4-9.8 9.82-9.8 2.62 0 5.08 1.02 6.93 2.88a9.73 9.73 0 0 1 2.87 6.93c0 5.4-4.4 9.8-9.72 9.8Zm5.38-7.35c-.29-.15-1.74-.86-2.01-.96-.27-.1-.47-.15-.66.15-.2.29-.76.96-.94 1.16-.17.19-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.46-.88-.79-1.48-1.76-1.65-2.06-.17-.29-.02-.45.13-.6.13-.13.3-.35.44-.52.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.91-2.2-.24-.58-.49-.5-.66-.51h-.57c-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.48 0 1.47 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.74-.71 1.99-1.4.24-.68.24-1.27.17-1.39-.08-.12-.27-.2-.56-.34Z"/></svg>;
+}
+
 const categories: Category[] = ['all', 'web', 'ai', 'quant', 'cyber'];
 
 export function App() {
@@ -19,6 +26,7 @@ export function App() {
   const [selected, setSelected] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('top');
   const c = copy;
   const items = filterProjects(projects, category);
   const project = projects.find((p) => p.id === selected) || null;
@@ -54,6 +62,21 @@ export function App() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  useEffect(() => {
+    const ids = ['top', 'about', 'projects', 'research', 'expertise', 'contact'];
+    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActiveSection(visible.target.id);
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.25, 0.4] },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
   function scrollTo(id: string) {
@@ -138,7 +161,7 @@ export function App() {
           </a>
           <nav aria-label="Main navigation">
             {navItems.map((item, i) => (
-              <a key={item.id} href={`#${item.id}`}>
+              <a key={item.id} href={`#${item.id}`} className={activeSection === item.id ? 'is-active' : ''} aria-current={activeSection === item.id ? 'true' : undefined}>
                 {item.label}
                 <span>{String(i).padStart(2, '0')}</span>
               </a>
@@ -168,10 +191,10 @@ export function App() {
                 <a className="primary-action" href="#projects">{c.viewWork}<Arrow /></a>
                 <a className="text-action" href="#contact">{c.contactCta}<Arrow diagonal /></a>
               </div>
-              <div className="hero-links">
-                <a href={social.github} target="_blank" rel="noreferrer">GitHub <Arrow diagonal /></a>
-                <a href={social.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow diagonal /></a>
-                <a href={social.whatsapp} target="_blank" rel="noreferrer">WhatsApp <Arrow diagonal /></a>
+              <div className="hero-links" aria-label="Social links">
+                <a href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><Arrow diagonal /></a>
+                <a href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><Arrow diagonal /></a>
+                <a href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><Arrow diagonal /></a>
               </div>
               <p className="fiction-notice"><span aria-hidden="true">◌</span> {c.statusNote}</p>
             </div>
@@ -333,10 +356,10 @@ export function App() {
                     <a className="contact-email" href={site.whatsappUrl} target="_blank" rel="noreferrer">{site.whatsappNumber}</a>
                     <p>{c.contactNote}</p>
                   </div>
-                  <div className="contact-socials">
-                    <a href={social.github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
-                    <a href={social.linkedin} target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a>
-                    <a href={social.whatsapp} target="_blank" rel="noreferrer">WhatsApp <span>↗</span></a>
+                  <div className="contact-socials" aria-label="Social links">
+                    <a href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
+                    <a href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
+                    <a href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
                   </div>
                   <div className="resume-actions">
                     <button onClick={download}>{c.download} ↓</button>
