@@ -192,9 +192,9 @@ export function App() {
                 <a className="text-action" href="#contact">{c.contactCta}<Arrow diagonal /></a>
               </div>
               <div className="hero-links" aria-label="Social links">
-                <a href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><Arrow diagonal /></a>
-                <a href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><Arrow diagonal /></a>
-                <a href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><Arrow diagonal /></a>
+                <a className="social-link social-github" href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><Arrow diagonal /></a>
+                <a className="social-link social-linkedin" href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><Arrow diagonal /></a>
+                <a className="social-link social-whatsapp" href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><Arrow diagonal /></a>
               </div>
               <p className="fiction-notice"><span aria-hidden="true">◌</span> {c.statusNote}</p>
             </div>
@@ -357,9 +357,9 @@ export function App() {
                     <p>{c.contactNote}</p>
                   </div>
                   <div className="contact-socials" aria-label="Social links">
-                    <a href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
-                    <a href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
-                    <a href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
+                    <a className="social-link social-github" href={social.github} target="_blank" rel="noreferrer"><SocialIcon kind="github" /><span>GitHub</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
+                    <a className="social-link social-linkedin" href={social.linkedin} target="_blank" rel="noreferrer"><SocialIcon kind="linkedin" /><span>LinkedIn</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
+                    <a className="social-link social-whatsapp" href={social.whatsapp} target="_blank" rel="noreferrer"><SocialIcon kind="whatsapp" /><span>WhatsApp</span><span className="contact-social-arrow" aria-hidden="true">↗</span></a>
                   </div>
                   <div className="resume-actions">
                     <button onClick={download}>{c.download} ↓</button>

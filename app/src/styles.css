@@ -245,3 +245,14 @@
 .case-result h3:not(:first-child){margin-top:32px}
 .case-links a{font-size:12px}
 @media(max-width:700px){.dialog-content{padding:28px 20px 36px}.dialog-content section p,.case-single p{font-size:13px}.case-columns{gap:28px;margin:32px 0}}
+
+/* Brand social icon colors */
+.social-github svg{color:#f5f7fa}
+.social-linkedin svg{color:#0A66C2}
+.social-whatsapp svg{color:#25D366}
+.hero-links .social-github:hover{border-color:rgba(245,247,250,.35);background:rgba(245,247,250,.06)}
+.hero-links .social-linkedin:hover{border-color:rgba(10,102,194,.45);background:rgba(10,102,194,.08)}
+.hero-links .social-whatsapp:hover{border-color:rgba(37,211,102,.45);background:rgba(37,211,102,.08)}
+.contact-socials .social-github:hover{border-color:rgba(245,247,250,.35);background:rgba(245,247,250,.06)}
+.contact-socials .social-linkedin:hover{border-color:rgba(10,102,194,.45);background:rgba(10,102,194,.08)}
+.contact-socials .social-whatsapp:hover{border-color:rgba(37,211,102,.45);background:rgba(37,211,102,.08)}
